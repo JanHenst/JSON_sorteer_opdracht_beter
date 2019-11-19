@@ -1,5 +1,5 @@
-.boekSelectie__cover {
-  width: 100px;
+.boekSelectie_cover {
+  max-width: 100px;
 }
 .boekSelectie__rij--accent {
   background-color: #def;
@@ -17,4 +17,16 @@
     width: auto;
     border: 0;
     margin: 0 .3em;
+}
+
+/* layout van de section */
+.boekSelectie {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-gap: 1em;
+  margin-bottom: 1em;
+}
+
+.boekSelectie__prijs {
+  font-size: 2em;
 }

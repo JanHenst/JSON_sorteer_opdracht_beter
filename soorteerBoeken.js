@@ -4,6 +4,12 @@ xmlhttp.onreadystatechange = function()  {
   if (this.readyState == 4 && this.status == 200) {
     soorteerBoekObject.data = JSON.parse(this.responseText);
     soorteerBoekObject.voegJSdatumIn();
+
+    //de date moeten ook een eigenschap gebben waarbij de titels in kapitalen staan
+    //daarop kan dan gesorteerd worden
+    soorteerBoekObject.data.forEach( boek => {
+      boek.titelUpper = boek.titel.toUpperCase();
+    });
     soorteerBoekObject.sorteren();
   }
 }
@@ -20,20 +26,6 @@ const maakTabelTop = (arr) => {
   return kop;
 }
 
-const maakTabelRij = (arr, accent) => {
-  let rij = "";
-  if(accent == true) {
-  rij = "<tr class='boekSelectie__rij--accent'>";
-} else {
-  rij = "<tr class='boekSelectie__rij'>";
-}
-
-  arr.forEach((item) => {
-    rij += "<td class='boekSelectie__data-cel'>" + item + "</td>";
-  });
-  rij += "</tr>";
-  return rij;
-}
 
 //funcite die vaan een maand-string een nummer maakt
 //waarbij januari eeen 0 geeft
@@ -79,13 +71,22 @@ const maakOpsomming = (array) => {
   return string;
 }
 
+// maak een functie die de tekst achter de komma vooraan plaatst
+const keerTekstOm = (string) => {
+  if (string.indexOf(',') != -1 ) {
+    let array = string.split(',');
+    string = array[1] + ' ' + array[0];
+  }
+  return string;
+}
+
 // object dat de boeken uitvoert en soorteert
 //eigenschappen: data (soorteer)kenmerk
 //methods: sorteren() en uitvoeren()
 let soorteerBoekObject  = {
   data: "",     //komt van xmlhttp.onredychange
 
-  kenmerk: "titel",
+  kenmerk: "titelUpper",
 
   //sorteervolgorde  en factor
   oplopend: 1,
@@ -105,41 +106,45 @@ let soorteerBoekObject  = {
 
   // de data in een tabel uitvoeren
   uitvoeren: function(data) {
-    let uitvoer = maakTabelTop(
-      ["titel",
-      "auteur(s)",
-      "cover",
-      "uitgave",
-      "paginas",
-      "taal",
-      "EAN",
-      "prijs",
-      "genre"]);
-    for(let i=0; i<data.length; i++) {
-      // geef reijen afwisselend een accent mee
-      let accent = false;
-      i%2 == 0 ? accent = true : accent = false;
-      let imgElement =
-      "<img src='"
-      + data[i].cover +
-      "' class='boekSelectie__cover' alt='" +
-      data[i].titel +
-      "'>";
-      // maak opsomming van de auteurs
-      let auteurs = maakOpsomming(data[i].auteur);
-      uitvoer += maakTabelRij(
-        [data[i].titel,
-        auteurs,
-        imgElement,
-        data[i].uitgave,
-        data[i].paginas,
-        data[i].taal,
-        data[i].ean,
-        data[i].prijs,
-        data[i].genre], accent);
-    }
+    //eerst de uitvoer leegmaken
+    document.getElementById('uitvoer').innerHTML = " ";
+    data.forEach( boek => {
+      let sectie = document.createElement('section');
+      sectie.className = 'boekSelectie';
 
-    document.getElementById('uitvoer').innerHTML = uitvoer;
+      //main element met alle info behalve de prijs en afbeelding
+      let main = document.createElement('main');
+      main.className = 'boekSelectie_main';
+
+      // cover maken(afbeelding)
+      let afbeelding = document.createElement('img');
+      afbeelding.className = 'boekSelectie_cover';
+      afbeelding.setAttribute('src', boek.cover);
+      afbeelding.setAttribute('alt', keerTekstOm(boek.titel));
+
+      // titel maken
+      let titel = document.createElement('h3');
+      titel.className = 'boekSelectie_titel';
+      titel.textContent = keerTekstOm(boek.titel);
+
+      //acteurs toevoegen
+      let auteur = document.createElement('p');
+      auteurs.className = 'boekSelectie__auteurs';
+      auteur.textContent = maakOpsomming(boek.auteur);
+
+      // prijs toevoegen
+      let prijs = document.createElement('div');
+      prijs.className = 'boekSelectie__prijs';
+      prijs.textContent = '€ ' + boek.prijs;
+
+      // het element toevoegen
+      sectie.appendChild(afbeelding);
+      main.appendChild(titel);
+      main.appendChild(auteur);
+      sectie.appendChild(main);
+      sectie.appendChild(prijs);
+      document.getElementById('uitvoer').appendChild(sectie);
+    });
   }
 }
 
