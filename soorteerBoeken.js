@@ -9,6 +9,8 @@ xmlhttp.onreadystatechange = function()  {
     //daarop kan dan gesorteerd worden
     soorteerBoekObject.data.forEach( boek => {
       boek.titelUpper = boek.titel.toUpperCase();
+      //ook de (achter)naam can de eerste auteur als eigenschap in data toevoegen
+      boek.sortAuteur = boek.auteur[0];
     });
     soorteerBoekObject.sorteren();
   }
@@ -114,33 +116,42 @@ let soorteerBoekObject  = {
 
       //main element met alle info behalve de prijs en afbeelding
       let main = document.createElement('main');
-      main.className = 'boekSelectie_main';
+      main.className = 'boekSelectie__main';
 
       // cover maken(afbeelding)
       let afbeelding = document.createElement('img');
-      afbeelding.className = 'boekSelectie_cover';
+      afbeelding.className = 'boekSelectie__cover';
       afbeelding.setAttribute('src', boek.cover);
       afbeelding.setAttribute('alt', keerTekstOm(boek.titel));
 
       // titel maken
       let titel = document.createElement('h3');
-      titel.className = 'boekSelectie_titel';
+      titel.className = 'boekSelectie__titel';
       titel.textContent = keerTekstOm(boek.titel);
 
-      //acteurs toevoegen
-      let auteur = document.createElement('p');
+      //auteurs toevoegen
+      let auteurs = document.createElement('p');
       auteurs.className = 'boekSelectie__auteurs';
-      auteur.textContent = maakOpsomming(boek.auteur);
+      // de voor en achternaam van de eerste auteur omdraaien
+      boek.auteur[0] = keerTekstOm(boek.auteur[0]);
+      // auteur staan in een array: deze omzetten naar Nederlands string
+      auteurs.textContent = maakOpsomming(boek.auteur);
+
+      // overige info toevoegen
+      let overig = document.createElement('p');
+      overig.className = 'boekSelectie__overig';
+      overig.textContent = boek.uitgave + ' | aantal pagina\'s ' + boek.paginas +  ' | ' + boek.taal +  ' | ean ' + boek.ean;
 
       // prijs toevoegen
       let prijs = document.createElement('div');
       prijs.className = 'boekSelectie__prijs';
-      prijs.textContent = '€ ' + boek.prijs;
+      prijs.textContent = boek.prijs.toLocaleString('nl-NL', {currency: 'EUR', style: 'currency'});
 
       // het element toevoegen
       sectie.appendChild(afbeelding);
       main.appendChild(titel);
-      main.appendChild(auteur);
+      main.appendChild(auteurs);
+      main.appendChild(overig);
       sectie.appendChild(main);
       sectie.appendChild(prijs);
       document.getElementById('uitvoer').appendChild(sectie);

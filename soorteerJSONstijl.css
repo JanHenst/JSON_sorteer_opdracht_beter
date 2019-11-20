@@ -1,4 +1,7 @@
-.boekSelectie_cover {
+body {
+  font-family: sans-serif;
+}
+.boekSelectie__cover {
   max-width: 100px;
 }
 .boekSelectie__rij--accent {
@@ -27,6 +30,41 @@
   margin-bottom: 1em;
 }
 
+.boekSelectie__titel {
+  margin: 0;
+}
+
+.boekSelectie__overig {
+  margin: 0;
+  font-size: .8em;
+  color: #444;
+}
+
+.boekSelectie:nth-child(even) {
+  background-color: #eee;
+}
+
+.boekSelectie__main {
+  grid-template-rows: auto 1fr auto;
+  padding: .5em 0;
+}
+
 .boekSelectie__prijs {
   font-size: 2em;
+  padding: .5em;
+}
+
+@media screen and (min-width: 60em) {
+  #uitvoer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 2em;
+  }
+  .boekSelectie:nth-child(even) {
+    background-color: inherit;
+  }
+  .boekSelectie:nth-child(4n+2),
+  .boekSelectie:nth-child(4n+3) {
+    background-color: #eee;
+  }
 }
