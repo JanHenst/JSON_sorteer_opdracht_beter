@@ -82,6 +82,36 @@ const keerTekstOm = (string) => {
   return string;
 }
 
+//een winkelwagenobject deze
+//1. toegevoege items bevat
+//2. methode om toe te voegen
+//3. methode om items te verwijderen
+let winkelwagen = {
+  items: [],
+
+  haalItemsOp: function() {
+      let bestelling;
+      if ( localStorage.getItem('besteldeBoeken') == null) {
+        bestelling = [];
+      } else {
+        bestelling = JSON.parse(localStorage.getItem('besteldeBoeken'));
+        document.querySelector('.winkelwagen__aantal').innerHTML = bestelling.length;
+      }
+      return bestelling;
+  },
+
+  toevoegen: function(el) {
+    this.items = this.haalItemsOp();
+    this.items.push(el);
+    localStorage.setItem('besteldeBoeken', JSON.stringify(this.items));
+    document.querySelector('.winkelwagen__aantal').innerHTML = this.items.length;
+  }
+
+}
+
+winkelwagen.haalItemsOp();
+
+
 // object dat de boeken uitvoert en soorteert
 //eigenschappen: data (soorteer)kenmerk
 //methods: sorteren() en uitvoeren()
@@ -147,12 +177,21 @@ let soorteerBoekObject  = {
       prijs.className = 'boekSelectie__prijs';
       prijs.textContent = boek.prijs.toLocaleString('nl-NL', {currency: 'EUR', style: 'currency'});
 
+      //knop toevoegen bij de prijs
+      let knop = document.createElement('button');
+      knop.className = 'boekSelectie__knop';
+      knop.innerHTML = 'voeg toe aan <br>winkelwagen';
+      knop.addEventListener('click', () => {
+        winkelwagen.toevoegen(boek)
+      })
+
       // het element toevoegen
       sectie.appendChild(afbeelding);
       main.appendChild(titel);
       main.appendChild(auteurs);
       main.appendChild(overig);
       sectie.appendChild(main);
+      prijs.appendChild(knop);
       sectie.appendChild(prijs);
       document.getElementById('uitvoer').appendChild(sectie);
     });
