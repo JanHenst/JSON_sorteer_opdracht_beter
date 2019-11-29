@@ -8,8 +8,10 @@
     <link rel="stylesheet" href="soorteerJSONstijl.css">
   </head>
   <body>
-    <a href="bestelpagina.html"><div class="winkelwagen"><span class="winkelwagen__aantal"></span></div></a>
-    <h1>Een selectie van boeken</h1>
+    <header class="header">
+      <a href="bestelpagina.html"><div class="winkelwagen"><span class="winkelwagen__aantal"></span></div></a>
+      <h1>Een selectie van boeken</h1>
+    </header>
     <select id="kenmerk">
       <option value="titelUpper" selected>titel</option>
       <option value="sortAuteur">auteur(s)</option>
@@ -23,7 +25,7 @@
     <label><input type="radio" name="oplopend" value="1">oplopend</label>
     <label><input type="radio" name="oplopend" value="-1">aflopend</label>
     <div id="uitvoer"></div>
-    <script src="soorteerBoeken.js" charset="utf-8"></script>
+    <script src="soorteerBoeken.js"></script>
     <div id="validatie">
     <a href="http://validator.w3.org/check?uri=referer" target="_blank">
         <img src="https://blanken5.home.xs4all.nl/afb/valid-html5-blue.png" alt="Valide HTML5"></a>
