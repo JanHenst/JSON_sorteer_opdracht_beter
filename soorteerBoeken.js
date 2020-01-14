@@ -18,16 +18,6 @@ xmlhttp.onreadystatechange = function()  {
 xmlhttp.open('GET', "boeken.json", true);
 xmlhttp.send();
 
-// een tabel kop in markup uitvoeren uit een array
-const maakTabelTop = (arr) => {
-  let kop = "<table class='boekSelectie'><tr>";
-  arr.forEach((item) => {
-    kop += "<th>" + item + "</th>";
-  });
-  kop += "</tr>";
-  return kop;
-}
-
 
 //funcite die vaan een maand-string een nummer maakt
 //waarbij januari eeen 0 geeft
